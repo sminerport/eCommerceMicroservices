@@ -1,0 +1,47 @@
+<div class="container">
+    <mat-card class="w-50">
+      <mat-card-header>
+        <mat-card-title class="card-title">Edit Product</mat-card-title>
+        <span class="spacer"></span>
+        <a [routerLink]="['/admin', 'products']" mat-button class="mat-link">Back to Products</a>
+      </mat-card-header>
+  
+      <mat-card-content class="flex flex-column">
+        <form [formGroup]="editProductForm" (ngSubmit)="update()">
+          <mat-form-field class="w-100">
+            <mat-label>Product Name</mat-label>
+            <input matInput placeholder="Product Name" formControlName="productName" autofocus="autofocus" />
+            <mat-error *ngIf="productNameFormControl.hasError('required')">Product Name can't be blank</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field class="w-100">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option value="Electronics">Electronics</mat-option>
+              <mat-option value="HomeAppliances">Home Appliances</mat-option>
+              <mat-option value="Fashion">Fashion</mat-option>
+            </mat-select>
+            <mat-error *ngIf="categoryFormControl.hasError('required')">Category can't be blank</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field class="w-100">
+            <mat-label>Unit Price</mat-label>
+            <input matInput type="number" placeholder="Unit Price" formControlName="unitPrice" />
+            <mat-error *ngIf="unitPriceFormControl.hasError('required')">Unit Price can't be blank</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>Quantity in Stock</mat-label>
+            <input matInput type="number" placeholder="Quantity in Stock" formControlName="quantityInStock" />
+            <mat-error *ngIf="quantityInStockFormControl.hasError('required')">Unit Price can't be blank</mat-error>
+          </mat-form-field>
+  
+          <div class="flex button-panel">
+            <div class="empty"></div>
+            <button mat-raised-button color="primary" type="submit" *ngIf="usersService.isAuthenticated && usersService.isAdmin">Save</button>
+          </div>
+  
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-microservice-deployment
+  namespace: ecommerce-namespace
+  labels:
+    app: products-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-microservice
+  template:
+    metadata:
+      labels:
+        app: products-microservice
+    spec:
+      containers:
+        - name: products-microservice
+          image: microecommerceregistry.azurecr.io/products-microservice:latest
+          ports:
+            - containerPort: 7070
+
+          envFrom:
+            - configMapRef:
+                name: ecommerce-config
+
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: MYSQL_USER
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials
+                  key: MYSQL_PASSWORD
+
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_USERNAME
+
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_PASSWORD
+

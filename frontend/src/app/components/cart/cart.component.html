@@ -1,0 +1,41 @@
+<h3 class="page-header">Cart</h3>
+
+<div *ngIf="cartItems.length == 0" class="text-center">
+    <img src="assets/empty-cart.png" width="200px" alt="Image description">
+    <h3>Your cart is empty!</h3>
+</div>
+
+<div class="flex flex-justify-content mb">
+    <table mat-table *ngIf="cartItems.length > 0" [dataSource]="cartItemsDataSource">
+        <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element.productName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let element"> {{ element.unitPrice | currency }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element" class="flex">
+                <button mat-icon-button (click)="decreaseQuantity(element)">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <button mat-button class="mt">
+                    {{ element.quantity }}
+                </button>
+                <button mat-icon-button (click)="increaseQuantity(element)">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+<button class="mt" mat-flat-button color="primary" *ngIf="usersService.isAuthenticated && cartItems.length > 0" (click)="placeOrder()">Place Order</button>
+<a mat-button color="primary" *ngIf="!usersService.isAuthenticated" [routerLink]="['/auth', 'login']">Login to place order</a>

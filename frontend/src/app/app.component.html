@@ -1,0 +1,94 @@
+<div class="top-container flex">
+  <div class="side-bar flex flex-column">
+
+    <div class="flex app-title-container title-color">
+      <mat-icon class="title-color">storefront</mat-icon>
+      <span class="e-commerce-title">e-Commerce</span>
+    </div>
+
+    <a mat-button [routerLink]="['/products', 'showcase']" class="side-bar-button" routerLinkActive="active-link">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </a>
+
+    <a mat-button [routerLink]="['/cart']" class="side-bar-button" routerLinkActive="active-link"
+      *ngIf="usersService.isAuthenticated && usersService.isAdmin == false">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>Cart</span>
+    </a>
+
+    <a mat-button [routerLink]="['/orders']" class="side-bar-button" routerLinkActive="active-link"
+      *ngIf="usersService.isAuthenticated && usersService.isAdmin == false">
+      <mat-icon>receipt</mat-icon>
+      <span>Orders</span>
+    </a>
+
+    <a mat-button [routerLink]="['/admin', 'products']" class="side-bar-button" routerLinkActive="active-link"
+      *ngIf="usersService.isAuthenticated && usersService.isAdmin">
+      <mat-icon>folder</mat-icon>
+      <span>Products</span>
+    </a>
+
+    <a mat-button [routerLink]="['/admin', 'orders']" class="side-bar-button" routerLinkActive="active-link"
+      *ngIf="usersService.isAuthenticated && usersService.isAdmin">
+      <mat-icon>receipt</mat-icon>
+      <span>Orders</span>
+    </a>
+
+    <span class="spacer"></span>
+
+    <div class="copy-right">
+      &copy; All rights reserved
+    </div>
+  </div>
+
+  <div class="app-container">
+    <mat-toolbar class="top-bar">
+      <div></div>
+      <span class="spacer"></span>
+      <form id="search-form" [formGroup]="searchForm" (ngSubmit)="search()">
+        <div class="search-wrapper">
+          <div class="search-box">
+            <input id="searchText" type="search" name="searchText" placeholder="Search" formControlName="searchStr" />
+            <button id="searchButton" type="submit" name="searchButton">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="#666666"
+                  d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <a mat-button [routerLink]="['auth', 'register']" class="top-bar-button" routerLinkActive="active-link"
+        *ngIf="!usersService.isAuthenticated">
+        <mat-icon>person_add</mat-icon>
+        <span>Register</span>
+      </a>
+
+      <a mat-button [routerLink]="['auth', 'login']" class="top-bar-button" routerLinkActive="active-link"
+        *ngIf="!usersService.isAuthenticated">
+        <mat-icon>person</mat-icon>
+        <span>Login</span>
+      </a>
+
+
+      <button *ngIf="usersService.isAuthenticated" mat-button class="ml">
+        <mat-icon>person</mat-icon>
+        <span>{{usersService.currentUserName}}</span>
+      </button>
+
+      <a mat-button (click)="logout()" class="top-bar-button" routerLinkActive="active-link"
+        *ngIf="usersService.isAuthenticated">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </a>
+    </mat-toolbar>
+
+    <div class="page-container">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+
+</div>

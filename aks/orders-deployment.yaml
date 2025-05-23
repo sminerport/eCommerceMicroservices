@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-microservice-deployment
+  namespace: ecommerce-namespace
+  labels:
+    app: orders-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-microservice
+  template:
+    metadata:
+      labels:
+        app: orders-microservice
+    spec:
+      containers:
+        - name: orders-microservice
+          image: microecommerceregistry.azurecr.io/orders-microservice:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: ecommerce-config
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_USERNAME
+
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_PASSWORD

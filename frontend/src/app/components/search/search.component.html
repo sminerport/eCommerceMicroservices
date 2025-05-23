@@ -1,0 +1,19 @@
+<h3 class="page-header">Products Search</h3>
+<div class="flex flex-row flex-wrap flex-justify-content">
+    <mat-card class="product flex-item" *ngFor="let product of products">
+        <mat-card-header>
+            <mat-card-subtitle>{{product.category}}</mat-card-subtitle>
+            <mat-card-title>{{product.productName}}</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content class="mt">
+            <p class="text-grey bold">{{product.unitPrice | currency}}</p>
+            <mat-divider></mat-divider>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-flat-button color="primary" *ngIf="usersService.isAuthenticated">Add to Cart</button>
+            <a mat-button color="primary" *ngIf="!usersService.isAuthenticated" [routerLink]="['/auth', 'login']">Login to add to cart</a>
+        </mat-card-actions>
+    </mat-card>
+</div>

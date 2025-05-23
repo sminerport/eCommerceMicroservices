@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecommerce-config
+  namespace: ecommerce-namespace
+data:
+  # MongoDB host, port, and database name (non-sensitive)
+  MONGODB_HOST: mongodb
+  MONGODB_PORT: "27017"
+  MONGODB_DATABASE: OrdersDatabase
+
+  # PostgreSQL host, port, and database name (non-sensitive)
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: eCommerceUsers
+
+  # MySQL host, port, and database name (non-sensitive)
+  MYSQL_HOST: mysql
+  MYSQL_PORT: "3306"
+  MYSQL_DB: ecommerceproductsdatabase
+
+  # Template for your MySQL DefaultConnection
+  ConnectionStrings__DefaultConnection: |
+    Server=$MYSQL_HOST;
+    Port=$MYSQL_PORT;
+    Database=$MYSQL_DB;
+    User=$MYSQL_USER;
+    Password=$MYSQL_PASSWORD;
+
+  # Template for your MongoDB connection
+  ConnectionStrings__MongoDB: |
+    mongodb://$MONGO_HOST:$MONGO_PORT
+
+  # Template for your Postgres Dapper connection
+  ConnectionStrings__PostgresConnection: |
+    Host=$POSTGRES_HOST;
+    Port=$POSTGRES_PORT;
+    Database=$POSTGRES_DB;
+    Username=$POSTGRES_USER;
+    Password=$POSTGRES_PASSWORD;
+
+  # Other service endpoints
+  UsersMicroservicePort: "8080"
+  UsersMicroserviceName: apigateway
+  ProductsMicroservicePort: "8080"
+  ProductsMicroserviceName: apigateway
+
+  # Redis
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+
+  # RabbitMQ (non-sensitive bits)
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_PRODUCTS_EXCHANGE: products.exchange
+  RABBITMQ_USERS_EXCHANGE: users.exchange

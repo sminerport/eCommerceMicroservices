@@ -1,0 +1,29 @@
+<div class="container">
+  <mat-card class="w-50">
+    <mat-card-header>
+      <mat-card-title class="card-title">Login</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="flex flex-column">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <mat-form-field class="w-100">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="Email" formControlName="Email" />
+          <mat-error *ngIf="emailFormControl.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('email')">Invalid email format</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="Password" formControlName="Password" />
+          <mat-error *ngIf="passwordFormControl.hasError('required')">Password is required</mat-error>
+        </mat-form-field>
+
+        <div class="flex button-panel">
+          <div class="empty"></div>
+          <button mat-raised-button color="primary" type="submit">Login</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

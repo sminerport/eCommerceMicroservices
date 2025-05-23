@@ -1,0 +1,9 @@
+[submodule "eCommerceSolution.OrdersService"]
+	path = eCommerceSolution.OrdersService
+	url = git@github.com:sminerport/eCommerceSolution.OrdersService.git
+[submodule "eCommerceSolution.ProductsService"]
+	path = eCommerceSolution.ProductsService
+	url = git@github.com:sminerport/eCommerceSolution.ProductsService.git
+[submodule "eCommerceSolution.UsersService"]
+	path = eCommerceSolution.UsersService
+	url = git@github.com:sminerport/eCommerceSolution.UsersService.git

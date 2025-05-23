@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-microservice
+  namespace: ecommerce-namespace
+spec:
+  selector:
+    app: products-microservice
+  ports:
+    - protocol: TCP
+      port: 7070
+      targetPort: 7070
+  type: ClusterIP

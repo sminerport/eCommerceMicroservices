@@ -1,0 +1,54 @@
+<h3 class="page-header flex">
+    <span>Products</span>
+    <span class="spacer"></span>
+    <a [routerLink]="['/products', 'create']" mat-button color="primary"
+        *ngIf="usersService.isAuthenticated && usersService.isAdmin">
+        <mat-icon>open_in_new</mat-icon>New Product
+    </a>
+</h3>
+<table mat-table [dataSource]="products" class="mat-elevation-z8">
+
+    <!-- Product Name Column -->
+    <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef>Product Name</th>
+        <td mat-cell *matCellDef="let product"> {{ product.productName }} </td>
+    </ng-container>
+
+    <!-- Category Column -->
+    <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let product"> {{ product.category }} </td>
+    </ng-container>
+
+    <!-- Unit Price Column -->
+    <ng-container matColumnDef="unitPrice">
+        <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+        <td mat-cell *matCellDef="let product"> {{ product.unitPrice | currency }} </td>
+    </ng-container>
+
+    <!-- Quantity in Stock Column -->
+    <ng-container matColumnDef="quantityInStock">
+        <th mat-header-cell *matHeaderCellDef>Quantity in Stock</th>
+        <td mat-cell *matCellDef="let product"> {{ product.quantityInStock }} </td>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let product">
+            <button mat-flat-button color="accent" *ngIf="usersService.isAuthenticated && usersService.isAdmin"
+                (click)="edit(product)" class="mr">
+                <mat-icon>edit</mat-icon>Edit
+            </button>
+
+            <button mat-flat-button color="warn" *ngIf="usersService.isAuthenticated && usersService.isAdmin"
+                (click)="delete(product)">
+                <mat-icon>delete</mat-icon>Delete
+            </button>
+        </td>
+    </ng-container>
+
+    <!-- Define table rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -1,0 +1,85 @@
+<h3 class="page-header">Orders</h3>
+
+<div *ngIf="orders.length == 0 && isLoaded" class="text-center">
+    <img src="assets/empty.png" width="200px" alt="Empty">
+    <h3>No Orders!</h3>
+</div>
+
+<div *ngIf="!isLoaded" class="text-center">
+    <h3>Loading...</h3>
+</div>
+
+<div *ngFor="let order of orders; let i = index" class="order-container">
+    <div class="order flex flex-justify-content flex-column">
+        <div class="flex-item order-number flex flex-justify-content">
+            <div class="flex-item" style="flex: 1">Order #{{i + 1}}</div>
+            <div class="flex-item flex flex-justify-content flex-row orders-user-details">
+                <div class="flex-item flex flex-justify-content flex-row">
+                    <div style="flex: 0 0 25px" class="mr text-blue"><mat-icon>person_outline</mat-icon></div>
+                    <div class="text-blue flex-item" style="margin-top:2px;">{{order.userPersonName}}</div>
+                </div>
+                <div class="flex-item flex flex-justify-content flex-row">
+                    <div style="flex: 0 0 25px" class="mr text-blue"><mat-icon>mail_outline</mat-icon></div>
+                    <div class="text-blue flex-item" style="margin-top:2px;">{{order.email}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-item flex flex-justify-content">
+            <div class="pt ml flex-item order-details" style="margin-left: 12px;">
+
+                <table class="table">
+                    <tr>
+                        <td class="text-grey" style="width:100px">Order ID:</td>
+                        <td>{{order.orderID}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-grey" style="width:100px">User ID:</td>
+                        <td>{{order.userID}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-grey">Order Date:</td>
+                        <td>{{order.orderDate}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="pb flex-item order-items-list">
+                <table mat-table [dataSource]="cartItemsDataSource[i]">
+                    <ng-container matColumnDef="productName">
+                        <th mat-header-cell *matHeaderCellDef> Product Name </th>
+                        <td mat-cell *matCellDef="let element" style="width:50%"> {{ element.productName }} </td>
+                        <td mat-footer-cell *matFooterCellDef class="border-top text-grey">Total Bill:</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unitPrice">
+                        <th mat-header-cell *matHeaderCellDef class="text-right"> Price </th>
+                        <td mat-cell *matCellDef="let element" style="width:20%" class="text-right"> {{
+                            element.unitPrice | currency }}
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef class="text-right border-top"></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef class="text-right"> Quantity </th>
+                        <td mat-cell *matCellDef="let element" style="width:10%" class="text-right"> {{ element.quantity
+                            }} </td>
+                        <td mat-footer-cell *matFooterCellDef class="text-right border-top"></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="itemTotal">
+                        <th mat-header-cell *matHeaderCellDef class="text-right"> Item Total </th>
+                        <td mat-cell *matCellDef="let element" style="width:20%" class="text-right"> {{ element.quantity
+                            * element.unitPrice | currency }} </td>
+                        <td mat-footer-cell *matFooterCellDef style="width:20%" class="text-right text-bold border-top">
+                            {{ order.totalBill | currency }} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  namespace: ecommerce-namespace
+  labels:
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: microecommerceregistry.azurecr.io/apigateway:latest
+          ports:
+            - containerPort: 8080
