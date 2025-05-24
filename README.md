@@ -57,6 +57,15 @@ This will build the database images from the folders mentioned above and start t
 ## Kubernetes Deployment
 Manifests under `aks/` describe Deployments and Services for running the entire stack on Kubernetes. They reference the container images built in CI/CD and configure ConfigMaps and Secrets for environment variables.
 
+## Security Note
+Sample Dockerfiles and initialization scripts in this repository use default credentials for demonstration purposes. For example:
+
+- `MYSQL_ROOT_PASSWORD=admin` in `mysql/Dockerfile`
+- example passwords in `postgres/postgres-init/sql2.sql`
+- an `'admin_token'` placeholder in `frontend/src/app/services/users.service.ts`
+
+These values are not meant for production. Override them with environment variables or secrets when deploying the services.
+
 ---
 
 This README offers a high level overview. For detailed instructions on building, running or testing each microservice, refer to the README contained in its corresponding submodule.
