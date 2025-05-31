@@ -1,25 +1,25 @@
 services:
   mongodb-container:
-    image: microecommerceregistry.azurecr.io/ecommerce-mongodb:latest
+    image: ecommerce-mongodb:latest
     build:
       context: ./mongodb
       dockerfile: Dockerfile
     env_file:
-      - ./mongodb/mongodb-secrets.env # (empty or auth vars if you enable MongoDB auth)
+      - ./mongodb/mongodb-secrets.env
     ports:
       - "27017:27017"
     networks:
       - orders-mongodb-network
 
   mysql-container:
-    image: microecommerceregistry.azurecr.io/ecommerce-mysql:latest
+    image: ecommerce-mysql:latest
     build:
       context: ./mysql
       dockerfile: Dockerfile
     env_file:
-      - ./mysql/mysql-secrets.env # defines MYSQL_ROOT_PASSWORD, MYSQL_USER, MYSQL_PASSWORD
+      - ./mysql/mysql-secrets.env
     environment:
-      - MYSQL_DATABASE=ecommerceproductsdatabase # non-sensitive config
+      - MYSQL_DATABASE=ecommerceproductsdatabase
     volumes:
       - ./mysql/initdb:/docker-entrypoint-initdb.d
     ports:
@@ -28,18 +28,18 @@ services:
       - products-mysql-network
 
   postgres-container:
-    image: microecommerceregistry.azurecr.io/ecommerce-postgres:latest
+    image: ecommerce-postgres:latest
     build:
       context: ./postgres
       dockerfile: Dockerfile
     env_file:
-      - ./postgres/postgres-secrets.env # defines POSTGRES_PASSWORD (and optional POSTGRES_USER)
+      - ./postgres/postgres-secrets.env
     volumes:
       - ./postgres/initdb:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
-      - orders-mongodb-network
+      - users-postgres-network
 
   redis:
     image: redis:latest
@@ -49,9 +49,9 @@ services:
       - ecommerce-network
 
   rabbitmq:
-    image: microecommerceregistry.azurecr.io/rabbitmq:4.1.0-management
+    image: rabbitmq:4.1.0-management
     env_file:
-      - ./rabbitmq/rabbitmq-secrets.env # defines RABBITMQ_DEFAULT_USER, RABBITMQ_DEFAULT_PASS
+      - ./rabbitmq/rabbitmq-secrets.env
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -59,7 +59,7 @@ services:
       - ecommerce-network
 
   apigateway:
-    image: microecommerceregistry.azurecr.io/apigateway:latest
+    image: apigateway:latest
     build:
       context: ./eCommerceSolution.OrdersService
       dockerfile: ApiGateway/Dockerfile
@@ -73,18 +73,17 @@ services:
       - users-microservice
 
   users-microservice:
-    image: microecommerceregistry.azurecr.io/users-microservice:latest
+    image: users-microservice:latest
     build:
       context: ./eCommerceSolution.UsersService
       dockerfile: eCommerce.API/Dockerfile
     env_file:
-      - ./postgres/postgres-secrets.env # uses postgres-secrets.env in postgres folder
+      - ./postgres/postgres-secrets.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - POSTGRES_HOST=postgres-container
       - POSTGRES_PORT=5432
       - POSTGRES_DB=eCommerceUsers
-      # POSTGRES_USER & POSTGRES_PASSWORD from env_file
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - RABBITMQ_PRODUCTS_EXCHANGE=users.exchange
@@ -95,18 +94,17 @@ services:
       - postgres-container
 
   products-microservice:
-    image: microecommerceregistry.azurecr.io/products-microservice:latest
+    image: products-microservice:latest
     build:
       context: ./eCommerceSolution.ProductsService
       dockerfile: ProductsMicroService.API/Dockerfile
     env_file:
-      - ./mysql/mysql-secrets.env # uses mysql-secrets.env for products
+      - ./mysql/mysql-secrets.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MYSQL_HOST=mysql-container
       - MYSQL_PORT=3306
       - MYSQL_DB=ecommerceproductsdatabase
-      # MYSQL_USER & MYSQL_PASSWORD from env_file
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - RABBITMQ_PRODUCTS_EXCHANGE=products.exchange
@@ -117,18 +115,15 @@ services:
       - mysql-container
 
   orders-microservice:
-    image: microecommerceregistry.azurecr.io/orders-microservice:latest
+    image: orders-microservice:latest
     build:
       context: ./eCommerceSolution.OrdersService
       dockerfile: OrdersMicroservice.API/Dockerfile
-    # env_file:
-    #   - ./orders/orders-secrets.env    # commented out; using defaults
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MONGODB_HOST=mongodb-container
       - MONGODB_PORT=27017
       - MONGODB_DATABASE=OrdersDatabase
-      # MongoDB auth from env_file if needed
       - UsersMicroservicePort=8080
       - UsersMicroserviceName=apigateway
       - ProductsMicroservicePort=8080

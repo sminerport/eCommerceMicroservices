@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: apigateway
-          image: microecommerceregistry.azurecr.io/apigateway:latest
+          image: scottazurecontainerregistry.azurecr.io/apigateway:latest
           ports:
             - containerPort: 8080

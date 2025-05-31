@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: microecommerceregistry.azurecr.io/ecommerce-mysql:latest
+          image: scottazurecontainerregistry.azurecr.io/ecommerce-mysql:latest
           envFrom:
             - configMapRef:
                 name: ecommerce-config
@@ -39,9 +39,6 @@ spec:
                 secretKeyRef:
                   name: mysql-credentials
                   key: MYSQL_PASSWORD
-
-            - name: MYSQL_DATABASE
-              value: ecommerceproductsdatabase
 
           ports:
             - containerPort: 3306

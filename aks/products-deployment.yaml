@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: products-microservice
-          image: microecommerceregistry.azurecr.io/products-microservice:latest
+          image: scottazurecontainerregistry.azurecr.io/products-microservice:latest
           ports:
             - containerPort: 7070
 

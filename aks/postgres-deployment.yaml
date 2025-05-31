@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: microecommerceregistry.azurecr.io/ecommerce-postgres:latest
+          image: scottazurecontainerregistry.azurecr.io/ecommerce-postgres:latest
 
           envFrom:
             - configMapRef:

@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: microecommerceregistry.azurecr.io/ecommerce-mongodb:latest
+          image: scottazurecontainerregistry.azurecr.io/ecommerce-mongodb:latest
           ports:
             - containerPort: 27017
