@@ -28,6 +28,9 @@ spec:
                   name: mysql-credentials
                   key: MYSQL_ROOT_PASSWORD
 
+            - name: MYSQL_DATABASE
+              value: ecommerceproductsdatabase
+
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:

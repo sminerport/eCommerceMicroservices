@@ -20,3 +20,8 @@ spec:
           image: scottazurecontainerregistry.azurecr.io/apigateway:latest
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: ecommerce-config
+            - secretRef:
+                name: rabbitmq-credentials

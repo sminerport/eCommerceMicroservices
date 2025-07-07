@@ -21,18 +21,19 @@ spec:
           ports:
             - containerPort: 9090
 
-          # 1) Pull in all your non-sensitive config in one go
           envFrom:
             - configMapRef:
-                name: ecommerce-config # must contain POSTGRES_HOST, POSTGRES_PORT ("5432"), POSTGRES_DB
+                name: ecommerce-config
 
-            # 2) Pull in your secrets
             - secretRef:
-                name: postgres-credentials # your Secret with POSTGRES_USER & POSTGRES_PASSWORD
+                name: postgres-credentials
 
-          # 3) Override POSTGRES_PORT so it’s just "5432", not "tcp://…"
           env:
-            # 4) If you aren’t already, explicitly bring in the user & password
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: "http://+:9090"
+
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:

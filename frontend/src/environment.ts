@@ -1,8 +1,8 @@
 // src/environments/environment.ts
 export const environment = {
   production: false,
-  usersAPIURL: 'http://localhost:4000/gateway/users/',
-  productsAPIURL: 'http://localhost:4000/gateway/products/',
-  ordersAPIURL: 'http://localhost:4000/gateway/orders/',
-  gatewayURL: 'http://localhost:4000/gateway/',
+  usersAPIURL: 'https://ecommerce-api-service.azure-api.net/gateway/users/',
+  productsAPIURL: 'https://ecommerce-api-service.azure-api.net/gateway/products/',
+  ordersAPIURL: 'https://ecommerce-api-service.azure-api.net/gateway/orders/',
+  gatewayURL: 'https://ecommerce-api-service.azure-api.net/gateway/',
 };

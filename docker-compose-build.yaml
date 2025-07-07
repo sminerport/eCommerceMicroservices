@@ -1,63 +1,4 @@
 services:
-  mongodb-container:
-    image: ecommerce-mongodb:latest
-    build:
-      context: ./mongodb
-      dockerfile: Dockerfile
-    env_file:
-      - ./mongodb/mongodb-secrets.env
-    ports:
-      - "27017:27017"
-    networks:
-      - orders-mongodb-network
-
-  mysql-container:
-    image: ecommerce-mysql:latest
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
-    env_file:
-      - ./mysql/mysql-secrets.env
-    environment:
-      - MYSQL_DATABASE=ecommerceproductsdatabase
-    volumes:
-      - ./mysql/initdb:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
-    networks:
-      - products-mysql-network
-
-  postgres-container:
-    image: ecommerce-postgres:latest
-    build:
-      context: ./postgres
-      dockerfile: Dockerfile
-    env_file:
-      - ./postgres/postgres-secrets.env
-    volumes:
-      - ./postgres/initdb:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
-    networks:
-      - users-postgres-network
-
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    networks:
-      - ecommerce-network
-
-  rabbitmq:
-    image: rabbitmq:4.1.0-management
-    env_file:
-      - ./rabbitmq/rabbitmq-secrets.env
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    networks:
-      - ecommerce-network
-
   apigateway:
     image: apigateway:latest
     build:
@@ -79,19 +20,26 @@ services:
       dockerfile: eCommerce.API/Dockerfile
     env_file:
       - ./postgres/postgres-secrets.env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - POSTGRES_HOST=postgres-container
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=eCommerceUsers
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_PRODUCTS_EXCHANGE=users.exchange
+      - ./postgres/postgres-config.env
+      - ./services/users/env.users
     networks:
       - users-postgres-network
       - ecommerce-network
     depends_on:
       - postgres-container
+
+  postgres-container:
+    image: ecommerce-postgres:latest
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    env_file:
+      - ./postgres/postgres-secrets.env
+      - ./postgres/postgres-config.env
+    ports:
+      - "5432:5432"
+    networks:
+      - users-postgres-network
 
   products-microservice:
     image: products-microservice:latest
@@ -100,39 +48,38 @@ services:
       dockerfile: ProductsMicroService.API/Dockerfile
     env_file:
       - ./mysql/mysql-secrets.env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MYSQL_HOST=mysql-container
-      - MYSQL_PORT=3306
-      - MYSQL_DB=ecommerceproductsdatabase
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_PRODUCTS_EXCHANGE=products.exchange
+      - ./mysql/mysql-config.env
+      - ./services/products/env.products
     networks:
       - products-mysql-network
       - ecommerce-network
     depends_on:
       - mysql-container
+      - rabbitmq
+      - redis
+
+  mysql-container:
+    image: ecommerce-mysql:latest
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    env_file:
+      - ./mysql/mysql-secrets.env
+      - ./mysql/mysql-config.env
+    ports:
+      - "3306:3306"
+    networks:
+      - products-mysql-network
 
   orders-microservice:
     image: orders-microservice:latest
     build:
       context: ./eCommerceSolution.OrdersService
       dockerfile: OrdersMicroservice.API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MONGODB_HOST=mongodb-container
-      - MONGODB_PORT=27017
-      - MONGODB_DATABASE=OrdersDatabase
-      - UsersMicroservicePort=8080
-      - UsersMicroserviceName=apigateway
-      - ProductsMicroservicePort=8080
-      - ProductsMicroserviceName=apigateway
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_PRODUCTS_EXCHANGE=orders.exchange
+    env_file:
+      - ./mongodb/mongodb-secrets.env
+      - ./mongodb/mongodb-config.env
+      - ./services/orders/env.orders
     networks:
       - orders-mongodb-network
       - ecommerce-network
@@ -140,6 +87,35 @@ services:
       - mongodb-container
       - rabbitmq
       - redis
+
+  mongodb-container:
+    image: ecommerce-mongodb:latest
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
+    env_file:
+      - ./mongodb/mongodb-secrets.env
+    ports:
+      - "27017:27017"
+    networks:
+      - orders-mongodb-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - ecommerce-network
+
+  rabbitmq:
+    image: rabbitmq:4.1.0-management
+    env_file:
+      - ./rabbitmq/rabbitmq-secrets.env
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - ecommerce-network
 
 networks:
   ecommerce-network:
